@@ -345,7 +345,7 @@ function FlooxaLib:CreateWindow(options)
             
             local ItemsLayout = Instance.new("UIListLayout")
             ItemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            ItemsLayout.Padding = UDim.new(0, 8)
+            ItemsLayout.Padding = UDim.new(0, 15)
             ItemsLayout.Parent = ItemsContainer
             
             local UIPadding = Instance.new("UIPadding")
