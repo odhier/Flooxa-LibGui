@@ -593,6 +593,413 @@ function FlooxaLib:CreateWindow(options)
                 end)
             end
             
+            function SectionAPI:AddLabel(labelOptions)
+                local text = labelOptions.Text or "Label"
+                
+                local LabelFrame = Instance.new("Frame")
+                LabelFrame.Size = UDim2.new(1, 0, 0, 25)
+                LabelFrame.BackgroundTransparency = 1
+                LabelFrame.Parent = ItemsContainer
+                
+                local Label = Instance.new("TextLabel")
+                Label.Size = UDim2.new(1, -10, 1, 0)
+                Label.Position = UDim2.new(0, 10, 0, 0)
+                Label.BackgroundTransparency = 1
+                Label.Text = text
+                Label.TextColor3 = Color3.fromRGB(200, 200, 200)
+                Label.Font = Enum.Font.Gotham
+                Label.TextSize = 13
+                Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.Parent = LabelFrame
+            end
+
+            function SectionAPI:AddInput(inputOptions)
+                local name = inputOptions.Name or "Input"
+                local numeric = inputOptions.Numeric or false
+                local placeholder = inputOptions.Placeholder or "Type here..."
+                local callback = inputOptions.Callback or function() end
+                
+                local InputFrame = Instance.new("Frame")
+                InputFrame.Size = UDim2.new(1, 0, 0, 35)
+                InputFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                InputFrame.BackgroundTransparency = 0.4
+                InputFrame.Parent = ItemsContainer
+                
+                local UICorner = Instance.new("UICorner")
+                UICorner.CornerRadius = UDim.new(0, 6)
+                UICorner.Parent = InputFrame
+                
+                local Title = Instance.new("TextLabel")
+                Title.Size = UDim2.new(0.5, -10, 1, 0)
+                Title.Position = UDim2.new(0, 10, 0, 0)
+                Title.BackgroundTransparency = 1
+                Title.Text = name
+                Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+                Title.Font = Enum.Font.GothamSemibold
+                Title.TextSize = 13
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.Parent = InputFrame
+                
+                local TextBoxFrame = Instance.new("Frame")
+                TextBoxFrame.Size = UDim2.new(0.5, -10, 0, 25)
+                TextBoxFrame.Position = UDim2.new(0.5, 0, 0.5, -12.5)
+                TextBoxFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                TextBoxFrame.BackgroundTransparency = 0.5
+                TextBoxFrame.Parent = InputFrame
+                
+                local BoxCorner = Instance.new("UICorner")
+                BoxCorner.CornerRadius = UDim.new(0, 4)
+                BoxCorner.Parent = TextBoxFrame
+                
+                local TextBox = Instance.new("TextBox")
+                TextBox.Size = UDim2.new(1, -10, 1, 0)
+                TextBox.Position = UDim2.new(0, 5, 0, 0)
+                TextBox.BackgroundTransparency = 1
+                TextBox.Text = ""
+                TextBox.PlaceholderText = placeholder
+                TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+                TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+                TextBox.Font = Enum.Font.Gotham
+                TextBox.TextSize = 12
+                TextBox.TextXAlignment = Enum.TextXAlignment.Left
+                TextBox.ClipsDescendants = true
+                TextBox.Parent = TextBoxFrame
+                
+                TextBox.FocusLost:Connect(function()
+                    local text = TextBox.Text
+                    if numeric then
+                        text = string.gsub(text, "%D", "")
+                        TextBox.Text = text
+                        if text ~= "" then
+                            callback(tonumber(text))
+                        end
+                    else
+                        callback(text)
+                    end
+                end)
+            end
+
+            function SectionAPI:AddDropdown(dropOptions)
+                local name = dropOptions.Name or "Dropdown"
+                local options = dropOptions.Options or {}
+                local multi = dropOptions.Multi or false
+                local callback = dropOptions.Callback or function() end
+                
+                local selected = multi and {} or nil
+                local isOpen = false
+                
+                local DropFrame = Instance.new("Frame")
+                DropFrame.Size = UDim2.new(1, 0, 0, 35)
+                DropFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                DropFrame.BackgroundTransparency = 0.4
+                DropFrame.ClipsDescendants = true
+                DropFrame.Parent = ItemsContainer
+                
+                local DropCorner = Instance.new("UICorner")
+                DropCorner.CornerRadius = UDim.new(0, 6)
+                DropCorner.Parent = DropFrame
+                
+                local DropBtn = Instance.new("TextButton")
+                DropBtn.Size = UDim2.new(1, 0, 0, 35)
+                DropBtn.BackgroundTransparency = 1
+                DropBtn.Text = ""
+                DropBtn.Parent = DropFrame
+                
+                local Title = Instance.new("TextLabel")
+                Title.Size = UDim2.new(1, -40, 1, 0)
+                Title.Position = UDim2.new(0, 10, 0, 0)
+                Title.BackgroundTransparency = 1
+                Title.Text = name .. (multi and " (0)" or "")
+                Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+                Title.Font = Enum.Font.GothamSemibold
+                Title.TextSize = 13
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.Parent = DropBtn
+                
+                local Icon = Instance.new("TextLabel")
+                Icon.Size = UDim2.new(0, 20, 0, 20)
+                Icon.Position = UDim2.new(1, -30, 0.5, -10)
+                Icon.BackgroundTransparency = 1
+                Icon.Text = "v"
+                Icon.TextColor3 = Color3.fromRGB(255, 105, 180)
+                Icon.Font = Enum.Font.GothamBold
+                Icon.TextSize = 14
+                Icon.Parent = DropBtn
+                
+                local SearchBox = Instance.new("TextBox")
+                SearchBox.Size = UDim2.new(1, -20, 0, 25)
+                SearchBox.Position = UDim2.new(0, 10, 0, 40)
+                SearchBox.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                SearchBox.BackgroundTransparency = 0.5
+                SearchBox.Text = ""
+                SearchBox.PlaceholderText = "Search..."
+                SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+                SearchBox.Font = Enum.Font.Gotham
+                SearchBox.TextSize = 12
+                SearchBox.Parent = DropFrame
+                
+                local SearchCorner = Instance.new("UICorner")
+                SearchCorner.CornerRadius = UDim.new(0, 4)
+                SearchCorner.Parent = SearchBox
+                
+                local ListFrame = Instance.new("ScrollingFrame")
+                ListFrame.Size = UDim2.new(1, -20, 0, 100)
+                ListFrame.Position = UDim2.new(0, 10, 0, 70)
+                ListFrame.BackgroundTransparency = 1
+                ListFrame.ScrollBarThickness = 2
+                ListFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 105, 180)
+                ListFrame.Parent = DropFrame
+                
+                local ListLayout = Instance.new("UIListLayout")
+                ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                ListLayout.Padding = UDim.new(0, 5)
+                ListLayout.Parent = ListFrame
+                
+                local optionBtns = {}
+                
+                local function updateTitle()
+                    if multi then
+                        local count = 0
+                        for _ in pairs(selected) do count = count + 1 end
+                        Title.Text = name .. " (" .. count .. ")"
+                    else
+                        Title.Text = name .. ": " .. tostring(selected or "None")
+                    end
+                end
+                
+                local function createOptions(filter)
+                    for _, btn in pairs(optionBtns) do btn:Destroy() end
+                    table.clear(optionBtns)
+                    
+                    local ySize = 0
+                    for _, opt in pairs(options) do
+                        if filter == "" or string.find(string.lower(opt), string.lower(filter)) then
+                            local OptBtn = Instance.new("TextButton")
+                            OptBtn.Size = UDim2.new(1, -10, 0, 25)
+                            OptBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+                            OptBtn.BackgroundTransparency = 0.5
+                            OptBtn.Text = "  " .. opt
+                            OptBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+                            OptBtn.Font = Enum.Font.Gotham
+                            OptBtn.TextSize = 12
+                            OptBtn.TextXAlignment = Enum.TextXAlignment.Left
+                            OptBtn.Parent = ListFrame
+                            
+                            local OptCorner = Instance.new("UICorner")
+                            OptCorner.CornerRadius = UDim.new(0, 4)
+                            OptCorner.Parent = OptBtn
+                            
+                            if multi and selected[opt] then
+                                OptBtn.TextColor3 = Color3.fromRGB(255, 105, 180)
+                            elseif not multi and selected == opt then
+                                OptBtn.TextColor3 = Color3.fromRGB(255, 105, 180)
+                            end
+                            
+                            OptBtn.MouseButton1Click:Connect(function()
+                                if multi then
+                                    selected[opt] = not selected[opt]
+                                    if not selected[opt] then selected[opt] = nil end
+                                    updateTitle()
+                                    createOptions(SearchBox.Text)
+                                    
+                                    local result = {}
+                                    for k, _ in pairs(selected) do table.insert(result, k) end
+                                    callback(result)
+                                else
+                                    selected = opt
+                                    updateTitle()
+                                    createOptions(SearchBox.Text)
+                                    callback(selected)
+                                    
+                                    isOpen = false
+                                    TweenService:Create(DropFrame, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, 35)}):Play()
+                                    TweenService:Create(Icon, TweenInfo.new(0.3), {Rotation = 0}):Play()
+                                end
+                            end)
+                            
+                            table.insert(optionBtns, OptBtn)
+                            ySize = ySize + 30
+                        end
+                    end
+                    ListFrame.CanvasSize = UDim2.new(0, 0, 0, ySize)
+                end
+                
+                createOptions("")
+                
+                SearchBox.Changed:Connect(function(prop)
+                    if prop == "Text" then
+                        createOptions(SearchBox.Text)
+                    end
+                end)
+                
+                DropBtn.MouseButton1Click:Connect(function()
+                    isOpen = not isOpen
+                    if isOpen then
+                        TweenService:Create(DropFrame, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, 180)}):Play()
+                        TweenService:Create(Icon, TweenInfo.new(0.3), {Rotation = 180}):Play()
+                    else
+                        TweenService:Create(DropFrame, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, 35)}):Play()
+                        TweenService:Create(Icon, TweenInfo.new(0.3), {Rotation = 0}):Play()
+                    end
+                end)
+            end
+
+            function SectionAPI:AddRadioGroup(radioOptions)
+                local name = radioOptions.Name or "Radio Group"
+                local options = radioOptions.Options or {}
+                local default = radioOptions.Default or nil
+                local callback = radioOptions.Callback or function() end
+                
+                local selected = default
+                
+                local RadioFrame = Instance.new("Frame")
+                RadioFrame.Size = UDim2.new(1, 0, 0, 35 + (#options * 30))
+                RadioFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                RadioFrame.BackgroundTransparency = 0.4
+                RadioFrame.Parent = ItemsContainer
+                
+                local RadioCorner = Instance.new("UICorner")
+                RadioCorner.CornerRadius = UDim.new(0, 6)
+                RadioCorner.Parent = RadioFrame
+                
+                local Title = Instance.new("TextLabel")
+                Title.Size = UDim2.new(1, -20, 0, 35)
+                Title.Position = UDim2.new(0, 10, 0, 0)
+                Title.BackgroundTransparency = 1
+                Title.Text = name
+                Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+                Title.Font = Enum.Font.GothamSemibold
+                Title.TextSize = 13
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.Parent = RadioFrame
+                
+                local circles = {}
+                
+                for i, opt in ipairs(options) do
+                    local OptBtn = Instance.new("TextButton")
+                    OptBtn.Size = UDim2.new(1, -20, 0, 25)
+                    OptBtn.Position = UDim2.new(0, 10, 0, 35 + ((i - 1) * 30))
+                    OptBtn.BackgroundTransparency = 1
+                    OptBtn.Text = ""
+                    OptBtn.Parent = RadioFrame
+                    
+                    local OuterCircle = Instance.new("Frame")
+                    OuterCircle.Size = UDim2.fromOffset(16, 16)
+                    OuterCircle.Position = UDim2.new(0, 0, 0.5, -8)
+                    OuterCircle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                    OuterCircle.Parent = OptBtn
+                    
+                    local OuterCorner = Instance.new("UICorner")
+                    OuterCorner.CornerRadius = UDim.new(1, 0)
+                    OuterCorner.Parent = OuterCircle
+                    
+                    local InnerCircle = Instance.new("Frame")
+                    InnerCircle.Size = UDim2.fromOffset(8, 8)
+                    InnerCircle.Position = UDim2.fromScale(0.5, 0.5)
+                    InnerCircle.AnchorPoint = Vector2.new(0.5, 0.5)
+                    InnerCircle.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+                    InnerCircle.BackgroundTransparency = (selected == opt) and 0 or 1
+                    InnerCircle.Parent = OuterCircle
+                    
+                    local InnerCorner = Instance.new("UICorner")
+                    InnerCorner.CornerRadius = UDim.new(1, 0)
+                    InnerCorner.Parent = InnerCircle
+                    
+                    local OptLabel = Instance.new("TextLabel")
+                    OptLabel.Size = UDim2.new(1, -25, 1, 0)
+                    OptLabel.Position = UDim2.new(0, 25, 0, 0)
+                    OptLabel.BackgroundTransparency = 1
+                    OptLabel.Text = opt
+                    OptLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    OptLabel.Font = Enum.Font.Gotham
+                    OptLabel.TextSize = 12
+                    OptLabel.TextXAlignment = Enum.TextXAlignment.Left
+                    OptLabel.Parent = OptBtn
+                    
+                    circles[opt] = InnerCircle
+                    
+                    OptBtn.MouseButton1Click:Connect(function()
+                        if selected ~= opt then
+                            selected = opt
+                            for o, c in pairs(circles) do
+                                TweenService:Create(c, TweenInfo.new(0.2), {BackgroundTransparency = (o == opt) and 0 or 1}):Play()
+                            end
+                            callback(selected)
+                        end
+                    end)
+                end
+            end
+
+            function SectionAPI:AddCheckbox(checkOptions)
+                local name = checkOptions.Name or "Checkbox"
+                local default = checkOptions.Default or false
+                local callback = checkOptions.Callback or function() end
+                
+                local state = default
+                
+                local CheckFrame = Instance.new("Frame")
+                CheckFrame.Size = UDim2.new(1, 0, 0, 32)
+                CheckFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                CheckFrame.BackgroundTransparency = 0.4
+                CheckFrame.Parent = ItemsContainer
+                
+                local CheckCorner = Instance.new("UICorner")
+                CheckCorner.CornerRadius = UDim.new(0, 6)
+                CheckCorner.Parent = CheckFrame
+                
+                local CheckBtn = Instance.new("TextButton")
+                CheckBtn.Size = UDim2.new(1, 0, 1, 0)
+                CheckBtn.BackgroundTransparency = 1
+                CheckBtn.Text = ""
+                CheckBtn.Parent = CheckFrame
+                
+                local Title = Instance.new("TextLabel")
+                Title.Size = UDim2.new(1, -50, 1, 0)
+                Title.Position = UDim2.new(0, 10, 0, 0)
+                Title.BackgroundTransparency = 1
+                Title.Text = name
+                Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+                Title.Font = Enum.Font.GothamSemibold
+                Title.TextSize = 13
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.Parent = CheckFrame
+                
+                local BoxOuter = Instance.new("Frame")
+                BoxOuter.Size = UDim2.fromOffset(20, 20)
+                BoxOuter.Position = UDim2.new(1, -30, 0.5, -10)
+                BoxOuter.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                BoxOuter.Parent = CheckFrame
+                
+                local OuterCorner = Instance.new("UICorner")
+                OuterCorner.CornerRadius = UDim.new(0, 4)
+                OuterCorner.Parent = BoxOuter
+                
+                local BoxInner = Instance.new("Frame")
+                BoxInner.Size = UDim2.fromScale(0, 0)
+                BoxInner.Position = UDim2.fromScale(0.5, 0.5)
+                BoxInner.AnchorPoint = Vector2.new(0.5, 0.5)
+                BoxInner.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+                BoxInner.Parent = BoxOuter
+                
+                local InnerCorner = Instance.new("UICorner")
+                InnerCorner.CornerRadius = UDim.new(0, 3)
+                InnerCorner.Parent = BoxInner
+                
+                if state then
+                    BoxInner.Size = UDim2.fromScale(0.7, 0.7)
+                end
+                
+                CheckBtn.MouseButton1Click:Connect(function()
+                    state = not state
+                    if state then
+                        TweenService:Create(BoxInner, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromScale(0.7, 0.7)}):Play()
+                    else
+                        TweenService:Create(BoxInner, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromScale(0, 0)}):Play()
+                    end
+                    callback(state)
+                end)
+            end
+            
             return SectionAPI
         end
         
