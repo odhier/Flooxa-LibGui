@@ -1,7 +1,8 @@
-local CoreGui = game:GetService("CoreGui")
-local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+
 local FlooxaLib = {}
 
 local function MakeDraggable(topbarObject, object)
@@ -228,11 +229,11 @@ function FlooxaLib:CreateWindow(options)
         if tabIcon ~= "" then
             local IconImg = Instance.new("ImageLabel")
             IconImg.Size = UDim2.fromOffset(18, 18)
-            IconImg.Position = UDim2.new(0, 8, 0.5, -9)
+            IconImg.Position = UDim2.new(0, 10, 0.5, -9) -- Digeser sedikit
             IconImg.BackgroundTransparency = 1
             IconImg.Image = tabIcon
             IconImg.Parent = TabBtn
-            TabBtn.Text = "       " .. tabName
+            TabBtn.Text = "          " .. tabName -- Menambah spasi agar title dan icon tidak dempet
         end
         
         local TabPage = Instance.new("ScrollingFrame")
@@ -339,6 +340,7 @@ function FlooxaLib:CreateWindow(options)
             ItemsContainer.Size = UDim2.new(1, 0, 0, 0)
             ItemsContainer.Position = UDim2.new(0, 0, 0, 40)
             ItemsContainer.BackgroundTransparency = 1
+            ItemsContainer.Visible = false -- Sembunyikan secara default agar tidak muncul saat tertutup
             ItemsContainer.Parent = SectionFrame
             
             local ItemsLayout = Instance.new("UIListLayout")
@@ -347,7 +349,7 @@ function FlooxaLib:CreateWindow(options)
             ItemsLayout.Parent = ItemsContainer
             
             local UIPadding = Instance.new("UIPadding")
-            UIPadding.PaddingTop = UDim.new(0, 5)
+            UIPadding.PaddingTop = UDim.new(0, 10) -- Padding top diperbesar
             UIPadding.PaddingBottom = UDim.new(0, 10)
             UIPadding.PaddingLeft = UDim.new(0, 10)
             UIPadding.PaddingRight = UDim.new(0, 10)
@@ -357,7 +359,8 @@ function FlooxaLib:CreateWindow(options)
       
             local function UpdateSectionSize()
                 if isOpen then
-                    local targetHeight = 40 + ItemsLayout.AbsoluteContentSize.Y + 15
+                    ItemsContainer.Visible = true -- Tampilkan saat terbuka
+                    local targetHeight = 40 + ItemsLayout.AbsoluteContentSize.Y + 20
                     TweenService:Create(SectionFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Size = UDim2.new(1, -5, 0, targetHeight)}):Play()
                     TweenService:Create(ToggleIcon, TweenInfo.new(0.3), {Rotation = 45, TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
                     TweenService:Create(SectionStroke, TweenInfo.new(0.3), {Transparency = 0.7, Color = Color3.fromRGB(255, 105, 180)}):Play()
@@ -365,6 +368,13 @@ function FlooxaLib:CreateWindow(options)
                     TweenService:Create(SectionFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Size = UDim2.new(1, -5, 0, 40)}):Play()
                     TweenService:Create(ToggleIcon, TweenInfo.new(0.3), {Rotation = 0, TextColor3 = Color3.fromRGB(255, 105, 180)}):Play()
                     TweenService:Create(SectionStroke, TweenInfo.new(0.3), {Transparency = 0.9, Color = Color3.fromRGB(255, 255, 255)}):Play()
+                    
+                    -- Sembunyikan saat tertutup penuh agar tidak bocor
+                    task.delay(0.4, function()
+                        if not isOpen then
+                            ItemsContainer.Visible = false
+                        end
+                    end)
                 end
                 
                 task.spawn(function()
