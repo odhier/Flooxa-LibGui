@@ -17,8 +17,7 @@
 Load the UI library using `loadstring` from GitHub:
 
 ```lua
--- Replace 'URL_TO_YOUR_RAW_GITHUB_FILE' with the raw URL to FlooxaLib.lua
-local FlooxaLib = loadstring(game:HttpGet("URL_TO_YOUR_RAW_GITHUB_FILE"))()
+local FlooxaLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/odhier/Flooxa-LibGui/refs/heads/main/main.lua"))()
 ```
 
 ---
