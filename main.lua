@@ -233,7 +233,7 @@ function FlooxaLib:CreateWindow(options)
             IconImg.BackgroundTransparency = 1
             IconImg.Image = tabIcon
             IconImg.Parent = TabBtn
-            TabBtn.Text = "          " .. tabName 
+            TabBtn.Text = "             " .. tabName 
         end
         
         local TabPage = Instance.new("ScrollingFrame")
@@ -338,7 +338,7 @@ function FlooxaLib:CreateWindow(options)
             
             local ItemsContainer = Instance.new("Frame")
             ItemsContainer.Size = UDim2.new(1, 0, 0, 0)
-            ItemsContainer.Position = UDim2.new(0, 0, 0, 40)
+            ItemsContainer.Position = UDim2.new(0, 0, 0, 50)
             ItemsContainer.BackgroundTransparency = 1
             ItemsContainer.Visible = false -- Sembunyikan secara default agar tidak muncul saat tertutup
             ItemsContainer.Parent = SectionFrame
