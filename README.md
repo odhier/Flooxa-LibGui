@@ -12,7 +12,7 @@
 
 ---
 
-## 🚀 Quick Start / Bootstrapping
+## Quick Start / Bootstrapping
 
 Load the UI library using `loadstring` from GitHub:
 
@@ -64,9 +64,76 @@ local MainSection = MainTab:MakeSection({
 
 ---
 
-## 4. Adding Elements (Buttons, Toggles, Sliders)
+## 4. Adding Elements
 
 All UI elements are added **inside a Section**.
+
+### Label (Text)
+```lua
+MainSection:AddLabel({
+    Text = "This is an informational text."
+})
+```
+
+### Input Text
+```lua
+MainSection:AddInput({
+    Name = "Player Name",
+    Placeholder = "Enter name here...",
+    Numeric = false,
+    Callback = function(text)
+        print("Input given:", text)
+    end
+})
+```
+
+### Input Number / Float
+```lua
+MainSection:AddInput({
+    Name = "Set JumpPower",
+    Placeholder = "Numbers only...",
+    Numeric = true,
+    Callback = function(value)
+        print("Number given:", value)
+    end
+})
+```
+
+### Dropdown (With Search & Multi-select)
+```lua
+MainSection:AddDropdown({
+    Name = "Select Player",
+    Options = {"Player1", "Player2", "Player3"},
+    Multi = false, -- Set to true for multi-select
+    Callback = function(selected)
+        -- 'selected' is a string if Multi is false, or a table if Multi is true
+        print("Selected:", selected)
+    end
+})
+```
+
+### Radio Group
+```lua
+MainSection:AddRadioGroup({
+    Name = "ESP Mode",
+    Options = {"Box", "Skeleton", "Tracers"},
+    Default = "Box",
+    Callback = function(selected)
+        print("ESP Mode changed to:", selected)
+    end
+})
+```
+
+### Checkbox
+```lua
+MainSection:AddCheckbox({
+    Name = "God Mode",
+    Default = false,
+    Callback = function(state)
+        print("God Mode:", state)
+    end
+})
+```
 
 ### Button
 ```lua
@@ -118,7 +185,7 @@ Window:MakeNotification({
 
 ---
 
-## 🖼️ Icon Support (FontAwesome)
+## Icon Support (FontAwesome)
 
 Because this library accepts direct Roblox Asset IDs for Tab icons, you can use popular FontAwesome image packs uploaded by the Roblox community.
 
