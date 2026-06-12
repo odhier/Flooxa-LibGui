@@ -229,7 +229,7 @@ function FlooxaLib:CreateWindow(options)
         if tabIcon ~= "" then
             local IconImg = Instance.new("ImageLabel")
             IconImg.Size = UDim2.fromOffset(18, 18)
-            IconImg.Position = UDim2.new(0, -15, 0.5, -9) 
+            IconImg.Position = UDim2.new(0, 10, 0.5, -9) 
             IconImg.BackgroundTransparency = 1
             IconImg.Image = tabIcon
             IconImg.Parent = TabBtn
