@@ -7,7 +7,8 @@
 - **Liquid Glass Theme**: Transparent futuristic blur gradient (Dark to Pink).
 - **Floating Minimize Logo**: Minimize to a draggable floating Flooxa logo!
 - **Accordion Sections**: Collapsable & expandable categories inside tabs.
-- **Components included**: Tabs, Sections, Buttons, Toggles, Sliders, and Notifications (Toast).
+- **Components included**: Tabs, Sections, Buttons, Toggles, Sliders, Dropdowns, Inputs, Radio Groups, Checkboxes, and Notifications (Toast).
+- **Default Values**: All interactive components (Toggle, Slider, Dropdown, Input, Radio, Checkbox) support `Default` values for pre-setting states.
 - **Supports Icon Menu**: Uses Asset IDs (e.g., FontAwesome Image IDs).
 
 ---
@@ -79,6 +80,7 @@ MainSection:AddLabel({
 MainSection:AddInput({
     Name = "Player Name",
     Placeholder = "Enter name here...",
+    Default = "Steve",     -- Optional: pre-fills the textbox with this value
     Numeric = false,
     Callback = function(text)
         print("Input given:", text)
@@ -91,6 +93,7 @@ MainSection:AddInput({
 MainSection:AddInput({
     Name = "Set JumpPower",
     Placeholder = "Numbers only...",
+    Default = 50,           -- Optional: pre-fills with this number
     Numeric = true,
     Callback = function(value)
         print("Number given:", value)
@@ -98,18 +101,37 @@ MainSection:AddInput({
 })
 ```
 
-### Dropdown (With Search & Multi-select)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `Name` | string | Yes | Label text shown next to the input |
+| `Placeholder` | string | No | Placeholder text when input is empty |
+| `Default` | string/number | No | Pre-fills the textbox with this value |
+| `Numeric` | boolean | No | If `true`, only accepts numbers |
+| `Callback` | function | Yes | Called with the input value when focus is lost |
+
+### Dropdown (With Search, Default & Multi-select)
 ```lua
 MainSection:AddDropdown({
     Name = "Select Player",
     Options = {"Player1", "Player2", "Player3"},
-    Multi = false, -- Set to true for multi-select
+    Default = "Player1",  -- Optional: pre-selects this option and shows it in the title
+    Multi = false,         -- Set to true for multi-select
     Callback = function(selected)
         -- 'selected' is a string if Multi is false, or a table if Multi is true
         print("Selected:", selected)
     end
 })
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `Name` | string | Yes | Label text for the dropdown |
+| `Options` | table | Yes | Array of string options to choose from |
+| `Default` | string | No | Pre-selects this option (shown in title). Only works when `Multi = false` |
+| `Multi` | boolean | No | If `true`, allows selecting multiple options |
+| `Callback` | function | Yes | Called with selected value (string) or values (table if Multi) |
+
+> **Note:** The dropdown includes a built-in search box to filter options. When `Default` is set, the dropdown title will display the pre-selected value on load.
 
 ### Radio Group
 ```lua
