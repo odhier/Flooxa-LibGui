@@ -669,10 +669,13 @@ function FlooxaLib:CreateWindow(options)
                 TextBox.FocusLost:Connect(function()
                     local text = TextBox.Text
                     if numeric then
-                        text = string.gsub(text, "%D", "")
-                        TextBox.Text = text
-                        if text ~= "" then
-                            callback(tonumber(text))
+                        text = string.gsub(text, "[^%d%.%-]", "")
+                        local num = tonumber(text)
+                        if num then
+                            TextBox.Text = tostring(num)
+                            callback(num)
+                        else
+                            TextBox.Text = ""
                         end
                     else
                         callback(text)
