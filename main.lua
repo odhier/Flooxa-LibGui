@@ -617,6 +617,7 @@ function FlooxaLib:CreateWindow(options)
                 local name = inputOptions.Name or "Input"
                 local numeric = inputOptions.Numeric or false
                 local placeholder = inputOptions.Placeholder or "Type here..."
+                local default = inputOptions.Default or nil
                 local callback = inputOptions.Callback or function() end
                 
                 local InputFrame = Instance.new("Frame")
@@ -655,7 +656,7 @@ function FlooxaLib:CreateWindow(options)
                 TextBox.Size = UDim2.new(1, -10, 1, 0)
                 TextBox.Position = UDim2.new(0, 5, 0, 0)
                 TextBox.BackgroundTransparency = 1
-                TextBox.Text = ""
+                TextBox.Text = default and tostring(default) or ""
                 TextBox.PlaceholderText = placeholder
                 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
@@ -683,9 +684,10 @@ function FlooxaLib:CreateWindow(options)
                 local name = dropOptions.Name or "Dropdown"
                 local options = dropOptions.Options or {}
                 local multi = dropOptions.Multi or false
+                local default = dropOptions.Default or nil
                 local callback = dropOptions.Callback or function() end
                 
-                local selected = multi and {} or nil
+                local selected = multi and {} or default
                 local isOpen = false
                 
                 local DropFrame = Instance.new("Frame")
@@ -709,7 +711,11 @@ function FlooxaLib:CreateWindow(options)
                 Title.Size = UDim2.new(1, -40, 1, 0)
                 Title.Position = UDim2.new(0, 10, 0, 0)
                 Title.BackgroundTransparency = 1
-                Title.Text = name .. (multi and " (0)" or "")
+                if default and not multi then
+                    Title.Text = name .. ": " .. tostring(default)
+                else
+                    Title.Text = name .. (multi and " (0)" or "")
+                end
                 Title.TextColor3 = Color3.fromRGB(240, 240, 240)
                 Title.Font = Enum.Font.GothamSemibold
                 Title.TextSize = 13
