@@ -393,8 +393,13 @@ function FlooxaLib:CreateWindow(options)
             end
             TabPage.Visible = true
             
-            TabPage.GroupTransparency = 1
-            TweenService:Create(TabPage, TweenInfo.new(0.3), {GroupTransparency = 0}):Play()
+            -- ScrollingFrame doesn't support GroupTransparency, fade children instead
+            for _, child in pairs(TabPage:GetChildren()) do
+                if child:IsA("GuiObject") then
+                    child.BackgroundTransparency = 1
+                    TweenService:Create(child, TweenInfo.new(0.3), {BackgroundTransparency = 0.6}):Play()
+                end
+            end
         end)
         
         local TabAPI = {}
