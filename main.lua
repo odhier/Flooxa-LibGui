@@ -123,6 +123,8 @@ function FlooxaLib:CreateWindow(options)
     MainStroke.Transparency = 0.85
     MainStroke.Parent = MainFrame
     
+    local WindowAPI = {}
+    
     -- ===== FOOTER BAR =====
     local FooterFrame = Instance.new("Frame")
     FooterFrame.Name = "FooterFrame"
@@ -146,7 +148,7 @@ function FlooxaLib:CreateWindow(options)
     DiscordBtn.Size = UDim2.new(0.5, -10, 1, 0)
     DiscordBtn.Position = UDim2.new(0, 10, 0, 0)
     DiscordBtn.BackgroundTransparency = 1
-    DiscordBtn.Text = "🎮 " .. discordLink
+    DiscordBtn.Text = discordLink
     DiscordBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
     DiscordBtn.Font = Enum.Font.Gotham
     DiscordBtn.TextSize = 11
@@ -171,7 +173,7 @@ function FlooxaLib:CreateWindow(options)
             end
         end)
         WindowAPI:MakeNotification({
-            Title = "📋 Link Copied!",
+            Title = "Link Copied!",
             Content = discordLink .. " has been copied to clipboard.",
             Duration = 3
         })
@@ -305,7 +307,7 @@ function FlooxaLib:CreateWindow(options)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = Body
     
-    local WindowAPI = {}
+    
     local firstTab = true
     
     function WindowAPI:MakeTab(tabOptions)
