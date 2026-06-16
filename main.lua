@@ -43,6 +43,8 @@ end
 function FlooxaLib:CreateWindow(options)
     local titleText = options.Name or "FlooxaHub"
     local logoId = options.Logo or "rbxassetid://79662742873050"
+    local discordLink = options.Discord or "discord.gg/flooxa"
+    local toolVersion = options.Version or "v1.0.0"
     
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "FlooxaLibGui"
@@ -121,6 +123,65 @@ function FlooxaLib:CreateWindow(options)
     MainStroke.Transparency = 0.85
     MainStroke.Parent = MainFrame
     
+    -- ===== FOOTER BAR =====
+    local FooterFrame = Instance.new("Frame")
+    FooterFrame.Name = "FooterFrame"
+    FooterFrame.Size = UDim2.fromOffset(550, 22)
+    FooterFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    FooterFrame.BackgroundTransparency = 0.4
+    FooterFrame.Parent = ScreenGui
+    
+    local FooterCorner = Instance.new("UICorner")
+    FooterCorner.CornerRadius = UDim.new(0, 8)
+    FooterCorner.Parent = FooterFrame
+    
+    local FooterStroke = Instance.new("UIStroke")
+    FooterStroke.Color = Color3.fromRGB(255, 255, 255)
+    FooterStroke.Thickness = 1
+    FooterStroke.Transparency = 0.92
+    FooterStroke.Parent = FooterFrame
+    
+    local DiscordLabel = Instance.new("TextLabel")
+    DiscordLabel.Name = "DiscordLabel"
+    DiscordLabel.Size = UDim2.new(0.5, -10, 1, 0)
+    DiscordLabel.Position = UDim2.new(0, 10, 0, 0)
+    DiscordLabel.BackgroundTransparency = 1
+    DiscordLabel.Text = "🎮 " .. discordLink
+    DiscordLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    DiscordLabel.Font = Enum.Font.Gotham
+    DiscordLabel.TextSize = 11
+    DiscordLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DiscordLabel.Parent = FooterFrame
+    
+    local VersionLabel = Instance.new("TextLabel")
+    VersionLabel.Name = "VersionLabel"
+    VersionLabel.Size = UDim2.new(0.5, -10, 1, 0)
+    VersionLabel.Position = UDim2.new(0.5, 0, 0, 0)
+    VersionLabel.BackgroundTransparency = 1
+    VersionLabel.Text = toolVersion
+    VersionLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    VersionLabel.Font = Enum.Font.Gotham
+    VersionLabel.TextSize = 11
+    VersionLabel.TextXAlignment = Enum.TextXAlignment.Right
+    VersionLabel.Parent = FooterFrame
+    
+    local VersionPadding = Instance.new("UIPadding")
+    VersionPadding.PaddingRight = UDim.new(0, 10)
+    VersionPadding.Parent = VersionLabel
+    
+    -- Keep footer positioned below MainFrame with a small gap
+    local FOOTER_GAP = 6
+    local function updateFooterPosition()
+        local absPos = MainFrame.AbsolutePosition
+        local absSize = MainFrame.AbsoluteSize
+        FooterFrame.Position = UDim2.fromOffset(absPos.X, absPos.Y + absSize.Y + FOOTER_GAP)
+        FooterFrame.Size = UDim2.fromOffset(absSize.X, 22)
+    end
+    updateFooterPosition()
+    
+    MainFrame:GetPropertyChangedSignal("AbsolutePosition"):Connect(updateFooterPosition)
+    MainFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateFooterPosition)
+    
     local Topbar = Instance.new("Frame")
     Topbar.Name = "Topbar"
     Topbar.Size = UDim2.new(1, 0, 0, 40)
@@ -159,8 +220,13 @@ function FlooxaLib:CreateWindow(options)
     
     MinimizeBtn.MouseButton1Click:Connect(function()
         TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
+        TweenService:Create(FooterFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(DiscordLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
+        TweenService:Create(VersionLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
+        TweenService:Create(FooterStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
         task.wait(0.3)
         MainFrame.Visible = false
+        FooterFrame.Visible = false
         FloatingLogo.Visible = true
         
         FloatingLogo.Size = UDim2.fromOffset(0, 0)
@@ -172,8 +238,20 @@ function FlooxaLib:CreateWindow(options)
         task.wait(0.2)
         FloatingLogo.Visible = false
         MainFrame.Visible = true
+        FooterFrame.Visible = true
         
         TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(550, 350)}):Play()
+        -- Fade footer back in
+        FooterFrame.BackgroundTransparency = 1
+        DiscordLabel.TextTransparency = 1
+        VersionLabel.TextTransparency = 1
+        FooterStroke.Transparency = 1
+        task.delay(0.15, function()
+            TweenService:Create(FooterFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0.4}):Play()
+            TweenService:Create(DiscordLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+            TweenService:Create(VersionLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+            TweenService:Create(FooterStroke, TweenInfo.new(0.3), {Transparency = 0.92}):Play()
+        end)
     end)
     
     local Body = Instance.new("Frame")
