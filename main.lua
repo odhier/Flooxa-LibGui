@@ -126,7 +126,7 @@ function FlooxaLib:CreateWindow(options)
     -- ===== FOOTER BAR =====
     local FooterFrame = Instance.new("Frame")
     FooterFrame.Name = "FooterFrame"
-    FooterFrame.Size = UDim2.fromOffset(550, 22)
+    FooterFrame.Size = UDim2.fromOffset(550, 28)
     FooterFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     FooterFrame.BackgroundTransparency = 0.4
     FooterFrame.Parent = ScreenGui
@@ -141,17 +141,41 @@ function FlooxaLib:CreateWindow(options)
     FooterStroke.Transparency = 0.92
     FooterStroke.Parent = FooterFrame
     
-    local DiscordLabel = Instance.new("TextLabel")
-    DiscordLabel.Name = "DiscordLabel"
-    DiscordLabel.Size = UDim2.new(0.5, -10, 1, 0)
-    DiscordLabel.Position = UDim2.new(0, 10, 0, 0)
-    DiscordLabel.BackgroundTransparency = 1
-    DiscordLabel.Text = "🎮 " .. discordLink
-    DiscordLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-    DiscordLabel.Font = Enum.Font.Gotham
-    DiscordLabel.TextSize = 11
-    DiscordLabel.TextXAlignment = Enum.TextXAlignment.Left
-    DiscordLabel.Parent = FooterFrame
+    local DiscordBtn = Instance.new("TextButton")
+    DiscordBtn.Name = "DiscordBtn"
+    DiscordBtn.Size = UDim2.new(0.5, -10, 1, 0)
+    DiscordBtn.Position = UDim2.new(0, 10, 0, 0)
+    DiscordBtn.BackgroundTransparency = 1
+    DiscordBtn.Text = "🎮 " .. discordLink
+    DiscordBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+    DiscordBtn.Font = Enum.Font.Gotham
+    DiscordBtn.TextSize = 11
+    DiscordBtn.TextXAlignment = Enum.TextXAlignment.Left
+    DiscordBtn.Parent = FooterFrame
+    
+    -- Hover effect for discord button
+    DiscordBtn.MouseEnter:Connect(function()
+        TweenService:Create(DiscordBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+    end)
+    DiscordBtn.MouseLeave:Connect(function()
+        TweenService:Create(DiscordBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
+    end)
+    
+    -- Click to copy discord link
+    DiscordBtn.MouseButton1Click:Connect(function()
+        pcall(function()
+            if setclipboard then
+                setclipboard(discordLink)
+            elseif toclipboard then
+                toclipboard(discordLink)
+            end
+        end)
+        WindowAPI:MakeNotification({
+            Title = "📋 Link Copied!",
+            Content = discordLink .. " has been copied to clipboard.",
+            Duration = 3
+        })
+    end)
     
     local VersionLabel = Instance.new("TextLabel")
     VersionLabel.Name = "VersionLabel"
@@ -175,7 +199,7 @@ function FlooxaLib:CreateWindow(options)
         local absPos = MainFrame.AbsolutePosition
         local absSize = MainFrame.AbsoluteSize
         FooterFrame.Position = UDim2.fromOffset(absPos.X, absPos.Y + absSize.Y + FOOTER_GAP)
-        FooterFrame.Size = UDim2.fromOffset(absSize.X, 22)
+        FooterFrame.Size = UDim2.fromOffset(absSize.X, 28)
     end
     updateFooterPosition()
     
@@ -221,7 +245,7 @@ function FlooxaLib:CreateWindow(options)
     MinimizeBtn.MouseButton1Click:Connect(function()
         TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
         TweenService:Create(FooterFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(DiscordLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
+        TweenService:Create(DiscordBtn, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
         TweenService:Create(VersionLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
         TweenService:Create(FooterStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
         task.wait(0.3)
@@ -243,12 +267,12 @@ function FlooxaLib:CreateWindow(options)
         TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(550, 350)}):Play()
         -- Fade footer back in
         FooterFrame.BackgroundTransparency = 1
-        DiscordLabel.TextTransparency = 1
+        DiscordBtn.TextTransparency = 1
         VersionLabel.TextTransparency = 1
         FooterStroke.Transparency = 1
         task.delay(0.15, function()
             TweenService:Create(FooterFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0.4}):Play()
-            TweenService:Create(DiscordLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+            TweenService:Create(DiscordBtn, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
             TweenService:Create(VersionLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
             TweenService:Create(FooterStroke, TweenInfo.new(0.3), {Transparency = 0.92}):Play()
         end)
