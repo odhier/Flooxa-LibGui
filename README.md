@@ -26,764 +26,196 @@ local FlooxaLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/odh
 ```
 ---
 
-
-
 ## 1. Creating the Window
 
-
+First things first, initialize your main hub window:
 
 ```lua
-
 local Window = FlooxaLib:CreateWindow({
-
     Name = "FlooxaHub", 
-
-    Logo = "rbxassetid://79662742873050" -- Put your own asset ID here
-
+    Logo = "rbxassetid://79662742873050" -- Swap this out with your own Asset ID
 })
-
 ```
-
-
 
 ---
 
+## 2. Setting Up Tabs
 
-
-## 2. Creating Tabs
-
-
-
-To create a tab, you need to use the `MakeTab` method.
-
-
+Tabs help split your features into different pages. Use the `MakeTab` method:
 
 ```lua
-
 local MainTab = Window:MakeTab({
-
     Name = "Main",
-
-    Icon = "rbxassetid://3926305904" -- Replace with FontAwesome Image IDs or Roblox Image ID
-
+    Icon = "rbxassetid://3926305904" -- Use FontAwesome Image IDs or standard Roblox Image IDs
 })
-
-
 
 local SettingsTab = Window:MakeTab({
-
     Name = "Settings",
-
     Icon = "rbxassetid://3926307971"
-
 })
-
 ```
 
-
-
 ---
-
-
 
 ## 3. Creating Sections (Accordion)
 
-
-
-Sections are placed inside Tabs. They can be clicked to open or close, neatly organizing your content!
-
-
+Sections live inside Tabs. They can be clicked to expand or collapse, which is perfect for keeping your layout neat.
 
 ```lua
-
 local MainSection = MainTab:MakeSection({
-
     Name = "Player Cheats"
-
 })
-
 ```
-
-
 
 ---
 
+## 4. Adding UI Elements
 
+Remember, all interactive elements must be placed **inside a Section**.
 
-## 4. Adding Elements
-
-
-
-All UI elements are added **inside a Section**.
-
-
-
-### Label (Text)
-
+### Label (Info Text)
 ```lua
-
 MainSection:AddLabel({
-
-    Text = "This is an informational text."
-
+    Text = "This is just some informational text."
 })
-
 ```
 
-
-
-### Input Text
-
+### Text Input
 ```lua
-
 MainSection:AddInput({
-
     Name = "Player Name",
-
-    Placeholder = "Enter name here...",
-
-    Default = "Steve",     -- Optional: pre-fills the textbox with this value
-
+    Placeholder = "Type a name here...",
+    Default = "Steve",      -- Optional: pre-fills the textbox
     Numeric = false,
-
     Callback = function(text)
-
-        print("Input given:", text)
-
+        print("Input received:", text)
     end
-
 })
-
 ```
 
-
-
-### Input Number / Float
-
+### Number / Float Input
 ```lua
-
 MainSection:AddInput({
-
     Name = "Set JumpPower",
-
     Placeholder = "Numbers only...",
-
-    Default = 50,           -- Optional: pre-fills with this number
-
-    Numeric = true,
-
+    Default = 50,           -- Optional: pre-fills the number
+    Numeric = true,         -- Only allows numbers to be typed
     Callback = function(value)
-
-        print("Number given:", value)
-
+        print("Number updated to:", value)
     end
-
 })
-
 ```
 
-
-
 | Parameter | Type | Required | Description |
-
 |-----------|------|----------|-------------|
-
 | `Name` | string | Yes | Label text shown next to the input |
+| `Placeholder` | string | No | Placeholder text when empty |
+| `Default` | string/number | No | Pre-fills the textbox on load |
+| `Numeric` | boolean | No | If `true`, blocks non-number inputs |
+| `Callback` | function | Yes | Fires with the value when focus is lost |
 
-| `Placeholder` | string | No | Placeholder text when input is empty |
-
-| `Default` | string/number | No | Pre-fills the textbox with this value |
-
-| `Numeric` | boolean | No | If `true`, only accepts numbers |
-
-| `Callback` | function | Yes | Called with the input value when focus is lost |
-
-
-
-### Dropdown (With Search, Default & Multi-select)
-
+### Dropdown (Searchable, Pre-select & Multi-select)
 ```lua
-
 MainSection:AddDropdown({
-
     Name = "Select Player",
-
     Options = {"Player1", "Player2", "Player3"},
-
-    Default = "Player1",  -- Optional: pre-selects this option and shows it in the title
-
-    Multi = false,         -- Set to true for multi-select
-
+    Default = "Player1",  -- Optional: pre-selects this option
+    Multi = false,        -- Set to true if you want multi-selection
     Callback = function(selected)
-
         -- 'selected' is a string if Multi is false, or a table if Multi is true
-
         print("Selected:", selected)
-
     end
-
 })
-
 ```
 
-
-
 | Parameter | Type | Required | Description |
-
 |-----------|------|----------|-------------|
-
 | `Name` | string | Yes | Label text for the dropdown |
-
 | `Options` | table | Yes | Array of string options to choose from |
+| `Default` | string | No | Pre-selects this option (Only works when `Multi = false`) |
+| `Multi` | boolean | No | Set to `true` to allow selecting multiple items |
+| `Callback` | function | Yes | Returns selected value (string) or values (table) |
 
-| `Default` | string | No | Pre-selects this option (shown in title). Only works when `Multi = false` |
-
-| `Multi` | boolean | No | If `true`, allows selecting multiple options |
-
-| `Callback` | function | Yes | Called with selected value (string) or values (table if Multi) |
-
-
-
-> **Note:** The dropdown includes a built-in search box to filter options. When `Default` is set, the dropdown title will display the pre-selected value on load.
-
-
+> **Note:** Dropdowns come with a built-in search box to filter options automatically. When `Default` is used, it will show up directly in the dropdown title right away.
 
 ### Radio Group
-
+Perfect when you only want users to pick a single choice out of a few options.
 ```lua
-
 MainSection:AddRadioGroup({
-
     Name = "ESP Mode",
-
     Options = {"Box", "Skeleton", "Tracers"},
-
     Default = "Box",
-
     Callback = function(selected)
-
         print("ESP Mode changed to:", selected)
-
     end
-
 })
-
 ```
-
-
 
 ### Checkbox
-
 ```lua
-
 MainSection:AddCheckbox({
-
     Name = "God Mode",
-
     Default = false,
-
     Callback = function(state)
-
-        print("God Mode:", state)
-
+        print("God Mode active:", state)
     end
-
 })
-
 ```
-
-
 
 ### Button
-
 ```lua
-
 MainSection:AddButton({
-
     Name = "Print Hello",
-
     Callback = function()
-
         print("Hello Flooxa!")
-
     end
-
 })
-
 ```
-
-
 
 ### Toggle
-
 ```lua
-
 MainSection:AddToggle({
-
     Name = "Auto Farm",
-
     Default = false,
-
     Callback = function(state)
-
-        print("Auto Farm state:", state)
-
+        print("Auto Farm toggled:", state)
     end
-
 })
-
 ```
-
-
 
 ### Slider
-
 ```lua
-
 MainSection:AddSlider({
-
     Name = "WalkSpeed",
-
     Min = 16,
-
     Max = 100,
-
     Default = 16,
-
     Callback = function(value)
-
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-
     end
-
 })
-
 ```
 
-
-
 ---
-
-
 
 ## 5. Notifications (Toast)
 
-
-
-You can call a notification toast from anywhere via the `Window` instance. They automatically stack and destroy themselves!
-
-
+You can trigger a sleek notification toast from literally anywhere in your script using your `Window` instance. They stack up nicely and clean themselves up automatically.
 
 ```lua
-
 Window:MakeNotification({
-
     Title = "Executed!",
-
-    Content = "The script has successfully loaded without errors.",
-
-    Duration = 5 -- In seconds (optional, defaults to 5)
-
+    Content = "The script loaded successfully without any errors.",
+    Duration = 5 -- In seconds (Optional, defaults to 5)
 })
-
 ```
-
-
 
 ---
 
+## 🎨 Icon Support
 
-
-## Icon Support
-
-
-
-
-
-
-
-*(To find more specific icons, you can use the Toolbox in Roblox Studio or search the Creator Marketplace for "FontAwesome")*
-
-
+You can use any standard Roblox image asset ID for your tabs or component icons. 
 
 ---
-
-**Enjoy building with FlooxaLib!** 
-
----
-
-
-
-## 1. Creating the Window
-
-
-
-```lua
-
-local Window = FlooxaLib:CreateWindow({
-
-    Name = "FlooxaHub", 
-
-    Logo = "rbxassetid://79662742873050" -- Put your own asset ID here
-
-})
-
-```
-
-
-
----
-
-
-
-## 2. Creating Tabs
-
-
-
-To create a tab, you need to use the `MakeTab` method.
-
-
-
-```lua
-
-local MainTab = Window:MakeTab({
-
-    Name = "Main",
-
-    Icon = "rbxassetid://3926305904" -- Replace with FontAwesome Image IDs or Roblox Image ID
-
-})
-
-
-
-local SettingsTab = Window:MakeTab({
-
-    Name = "Settings",
-
-    Icon = "rbxassetid://3926307971"
-
-})
-
-```
-
-
-
----
-
-
-
-## 3. Creating Sections (Accordion)
-
-
-
-Sections are placed inside Tabs. They can be clicked to open or close, neatly organizing your content!
-
-
-
-```lua
-
-local MainSection = MainTab:MakeSection({
-
-    Name = "Player Cheats"
-
-})
-
-```
-
-
-
----
-
-
-
-## 4. Adding Elements
-
-
-
-All UI elements are added **inside a Section**.
-
-
-
-### Label (Text)
-
-```lua
-
-MainSection:AddLabel({
-
-    Text = "This is an informational text."
-
-})
-
-```
-
-
-
-### Input Text
-
-```lua
-
-MainSection:AddInput({
-
-    Name = "Player Name",
-
-    Placeholder = "Enter name here...",
-
-    Default = "Steve",     -- Optional: pre-fills the textbox with this value
-
-    Numeric = false,
-
-    Callback = function(text)
-
-        print("Input given:", text)
-
-    end
-
-})
-
-```
-
-
-
-### Input Number / Float
-
-```lua
-
-MainSection:AddInput({
-
-    Name = "Set JumpPower",
-
-    Placeholder = "Numbers only...",
-
-    Default = 50,           -- Optional: pre-fills with this number
-
-    Numeric = true,
-
-    Callback = function(value)
-
-        print("Number given:", value)
-
-    end
-
-})
-
-```
-
-
-
-| Parameter | Type | Required | Description |
-
-|-----------|------|----------|-------------|
-
-| `Name` | string | Yes | Label text shown next to the input |
-
-| `Placeholder` | string | No | Placeholder text when input is empty |
-
-| `Default` | string/number | No | Pre-fills the textbox with this value |
-
-| `Numeric` | boolean | No | If `true`, only accepts numbers |
-
-| `Callback` | function | Yes | Called with the input value when focus is lost |
-
-
-
-### Dropdown (With Search, Default & Multi-select)
-
-```lua
-
-MainSection:AddDropdown({
-
-    Name = "Select Player",
-
-    Options = {"Player1", "Player2", "Player3"},
-
-    Default = "Player1",  -- Optional: pre-selects this option and shows it in the title
-
-    Multi = false,         -- Set to true for multi-select
-
-    Callback = function(selected)
-
-        -- 'selected' is a string if Multi is false, or a table if Multi is true
-
-        print("Selected:", selected)
-
-    end
-
-})
-
-```
-
-
-
-| Parameter | Type | Required | Description |
-
-|-----------|------|----------|-------------|
-
-| `Name` | string | Yes | Label text for the dropdown |
-
-| `Options` | table | Yes | Array of string options to choose from |
-
-| `Default` | string | No | Pre-selects this option (shown in title). Only works when `Multi = false` |
-
-| `Multi` | boolean | No | If `true`, allows selecting multiple options |
-
-| `Callback` | function | Yes | Called with selected value (string) or values (table if Multi) |
-
-
-
-> **Note:** The dropdown includes a built-in search box to filter options. When `Default` is set, the dropdown title will display the pre-selected value on load.
-
-
-
-### Radio Group
-
-```lua
-
-MainSection:AddRadioGroup({
-
-    Name = "ESP Mode",
-
-    Options = {"Box", "Skeleton", "Tracers"},
-
-    Default = "Box",
-
-    Callback = function(selected)
-
-        print("ESP Mode changed to:", selected)
-
-    end
-
-})
-
-```
-
-
-
-### Checkbox
-
-```lua
-
-MainSection:AddCheckbox({
-
-    Name = "God Mode",
-
-    Default = false,
-
-    Callback = function(state)
-
-        print("God Mode:", state)
-
-    end
-
-})
-
-```
-
-
-
-### Button
-
-```lua
-
-MainSection:AddButton({
-
-    Name = "Print Hello",
-
-    Callback = function()
-
-        print("Hello Flooxa!")
-
-    end
-
-})
-
-```
-
-
-
-### Toggle
-
-```lua
-
-MainSection:AddToggle({
-
-    Name = "Auto Farm",
-
-    Default = false,
-
-    Callback = function(state)
-
-        print("Auto Farm state:", state)
-
-    end
-
-})
-
-```
-
-
-
-### Slider
-
-```lua
-
-MainSection:AddSlider({
-
-    Name = "WalkSpeed",
-
-    Min = 16,
-
-    Max = 100,
-
-    Default = 16,
-
-    Callback = function(value)
-
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-
-    end
-
-})
-
-```
-
-
-
----
-
-
-
-## 5. Notifications (Toast)
-
-
-
-You can call a notification toast from anywhere via the `Window` instance. They automatically stack and destroy themselves!
-
-
-
-```lua
-
-Window:MakeNotification({
-
-    Title = "Executed!",
-
-    Content = "The script has successfully loaded without errors.",
-
-    Duration = 5 -- In seconds (optional, defaults to 5)
-
-})
-
-```
-
-
-
----
-
-
-
-## Icon Support
-
-
----
-
-**Enjoy building with FlooxaLib!** 
+**Enjoy building with FlooxaLib! 🚀**
 
