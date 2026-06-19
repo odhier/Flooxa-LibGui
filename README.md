@@ -22,4 +22,4 @@
 Just load the UI library using `loadstring` straight from GitHub:
 
 ```lua
-local FlooxaLib = loadstring(game:HttpGet("[https://raw.githubusercontent.com/odhier/Flooxa-LibGui/refs/heads/main/main.lua](https://raw.githubusercontent.com/odhier/Flooxa-LibGui/refs/heads/main/main.lua)"))()
+local FlooxaLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/odhier/Flooxa-LibGui/refs/heads/main/main.lua"))()
