@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://flooxa.odhier.site/assets/logo.png" alt="Flooxa Logo" width="150"/>
+  <img src="https://flooxa.odhier.site/assets/logo.png" alt="Flooxa Logo" width="450"/>
 </p>
 
 # Flooxa Lib Gui
