@@ -23,7 +23,7 @@ local FlooxaLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/odh
 
 ---
 
-## 🪟 1. Creating the Window
+## 1. Creating the Window
 
 ```lua
 local Window = FlooxaLib:CreateWindow({
@@ -34,7 +34,7 @@ local Window = FlooxaLib:CreateWindow({
 
 ---
 
-## 📑 2. Creating Tabs
+## 2. Creating Tabs
 
 To create a tab, you need to use the `MakeTab` method.
 
@@ -206,15 +206,9 @@ Window:MakeNotification({
 
 ---
 
-## Icon Support (FontAwesome)
+## Icon Support
 
-Because this library accepts direct Roblox Asset IDs for Tab icons, you can use popular FontAwesome image packs uploaded by the Roblox community.
 
-Some common Icon IDs:
-- Home / Main: `rbxassetid://3926305904`
-- Settings / Gear: `rbxassetid://3926307971`
-- User / Player: `rbxassetid://3926305904`
-- Target / Combat: `rbxassetid://3926305904`
 
 *(To find more specific icons, you can use the Toolbox in Roblox Studio or search the Creator Marketplace for "FontAwesome")*
 
