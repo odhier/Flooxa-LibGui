@@ -503,7 +503,10 @@ function FlooxaLib:CreateWindow(options)
                 if isOpen then UpdateSectionSize() end
             end)
             
-            local SectionAPI = {}
+            local SectionAPI = {
+                Container = ItemsContainer,
+                Instance = SectionFrame
+            }
             
             function SectionAPI:AddButton(btnOptions)
                 local btnText = btnOptions.Name or "Button"
