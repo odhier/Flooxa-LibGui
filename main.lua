@@ -1049,6 +1049,23 @@ function FlooxaLib:CreateWindow(options)
                         end
                     end)
                 end
+
+                return {
+                    Reset = function()
+                        if multi then
+                            table.clear(selected)
+                        else
+                            selected = default
+                        end
+                        updateTitle()
+                        createOptions("")
+                    end,
+                    Set = function(value)
+                        selected = value
+                        updateTitle()
+                        createOptions("")
+                    end
+                }
             end
 
             function SectionAPI:AddCheckbox(checkOptions)
