@@ -511,11 +511,12 @@ function FlooxaLib:CreateWindow(options)
             function SectionAPI:AddButton(btnOptions)
                 local btnText = btnOptions.Name or "Button"
                 local callback = btnOptions.Callback or function() end
+                local primary = btnOptions.Primary == true
                 
                 local Btn = Instance.new("TextButton")
                 Btn.Size = UDim2.new(1, 0, 0, 32)
-                Btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-                Btn.BackgroundTransparency = 0.4
+                Btn.BackgroundColor3 = primary and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(35, 35, 35)
+                Btn.BackgroundTransparency = primary and 0.15 or 0.4
                 Btn.Text = btnText
                 Btn.TextColor3 = Color3.fromRGB(240, 240, 240)
                 Btn.Font = Enum.Font.GothamSemibold
@@ -538,14 +539,14 @@ function FlooxaLib:CreateWindow(options)
                 end)
                 
                 Btn.MouseLeave:Connect(function()
-                    TweenService:Create(Btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.4}):Play()
+                    TweenService:Create(Btn, TweenInfo.new(0.2), {BackgroundTransparency = primary and 0.25 or 0.4}):Play()
                     TweenService:Create(BtnStroke, TweenInfo.new(0.2), {Transparency = 0.9, Color = Color3.fromRGB(255, 255, 255)}):Play()
                 end)
                 
                 Btn.MouseButton1Click:Connect(function()
                     TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
                     task.wait(0.1)
-                    TweenService:Create(Btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}):Play()
+                    TweenService:Create(Btn, TweenInfo.new(0.2), {BackgroundColor3 = primary and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(35, 35, 35)}):Play()
                     callback()
                 end)
             end
@@ -610,6 +611,76 @@ function FlooxaLib:CreateWindow(options)
                     end
                     callback(state)
                 end)
+            end
+
+            function SectionAPI:AddRadio(radioOptions)
+                local radioName = radioOptions.Name or "Radio"
+                local options = radioOptions.Options or {}
+                local selected = radioOptions.Default or options[1]
+                local callback = radioOptions.Callback or function() end
+                local optionButtons = {}
+                local optionCircles = {}
+
+                local RadioLabel = Instance.new("TextLabel")
+                RadioLabel.Size = UDim2.new(1, 0, 0, 24)
+                RadioLabel.BackgroundTransparency = 1
+                RadioLabel.Text = radioName
+                RadioLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+                RadioLabel.Font = Enum.Font.GothamSemibold
+                RadioLabel.TextSize = 13
+                RadioLabel.TextXAlignment = Enum.TextXAlignment.Left
+                RadioLabel.Parent = ItemsContainer
+
+                local function updateRadio(value)
+                    selected = value
+                    for option, button in pairs(optionButtons) do
+                        local active = option == selected
+                        button.BackgroundColor3 = active and Color3.fromRGB(55, 45, 65) or Color3.fromRGB(35, 35, 35)
+                        optionCircles[option].BackgroundColor3 = active and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(50, 50, 50)
+                    end
+                    callback(selected)
+                end
+
+                for _, option in ipairs(options) do
+                    local optionText = tostring(option)
+                    local optionButton = Instance.new("TextButton")
+                    optionButton.Size = UDim2.new(1, 0, 0, 32)
+                    optionButton.BackgroundColor3 = optionText == selected and Color3.fromRGB(55, 45, 65) or Color3.fromRGB(35, 35, 35)
+                    optionButton.BackgroundTransparency = 0.4
+                    optionButton.Text = optionText
+                    optionButton.TextColor3 = Color3.fromRGB(240, 240, 240)
+                    optionButton.Font = Enum.Font.GothamSemibold
+                    optionButton.TextSize = 13
+                    optionButton.TextXAlignment = Enum.TextXAlignment.Left
+                    optionButton.Parent = ItemsContainer
+                    optionButtons[optionText] = optionButton
+
+                    local optionCorner = Instance.new("UICorner")
+                    optionCorner.CornerRadius = UDim.new(0, 6)
+                    optionCorner.Parent = optionButton
+
+                    local circle = Instance.new("Frame")
+                    circle.Size = UDim2.fromOffset(16, 16)
+                    circle.Position = UDim2.new(1, -28, 0.5, -8)
+                    circle.BackgroundColor3 = optionText == selected and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(50, 50, 50)
+                    circle.Parent = optionButton
+                    optionCircles[optionText] = circle
+
+                    local circleCorner = Instance.new("UICorner")
+                    circleCorner.CornerRadius = UDim.new(1, 0)
+                    circleCorner.Parent = circle
+
+                    optionButton.MouseButton1Click:Connect(function()
+                        updateRadio(optionText)
+                    end)
+                end
+
+                return {
+                    GetValue = function()
+                        return selected
+                    end,
+                    SetValue = updateRadio,
+                }
             end
 
             function SectionAPI:AddSlider(sliderOptions)
