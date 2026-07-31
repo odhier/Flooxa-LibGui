@@ -811,9 +811,9 @@ function FlooxaLib:CreateWindow(options)
                 LabelCorner.Parent = LabelFrame
 
                 local LabelStroke = Instance.new("UIStroke")
-                LabelStroke.Color = Color3.fromRGB(105, 75, 125)
-                LabelStroke.Transparency = 0.15
-                LabelStroke.Thickness = 1
+                LabelStroke.Color = Color3.fromRGB(190, 95, 180)
+                LabelStroke.Transparency = 0
+                LabelStroke.Thickness = 1.5
                 LabelStroke.Parent = LabelFrame
                 
                 local Label = Instance.new("TextLabel")
@@ -822,7 +822,7 @@ function FlooxaLib:CreateWindow(options)
                 Label.Text = text
                 Label.TextColor3 = Color3.fromRGB(200, 200, 200)
                 Label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                Label.TextStrokeTransparency = wrapped and 0.35 or 1
+                Label.TextStrokeTransparency = wrapped and 0 or 1
                 Label.Font = Enum.Font.Gotham
                 Label.TextSize = 13
                 Label.TextXAlignment = Enum.TextXAlignment.Left
@@ -831,7 +831,7 @@ function FlooxaLib:CreateWindow(options)
 
                 local function updateLabelSize()
                     local horizontalPadding = 20
-                    local verticalPadding = wrapped and 12 or 0
+                    local verticalPadding = wrapped and 24 or 0
                     local width = math.max(1, ItemsContainer.AbsoluteSize.X - 30 - horizontalPadding)
                     local textBounds = TextService:GetTextSize(
                         text,
