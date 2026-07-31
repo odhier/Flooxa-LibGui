@@ -824,7 +824,7 @@ function FlooxaLib:CreateWindow(options)
                         Label.Font,
                         Vector2.new(width, math.huge)
                     )
-                    local height = wrapped and math.max(25, textBounds.Y + 6) or 25
+                    local height = wrapped and math.max(25, textBounds.Y + 30) or 25
                     LabelFrame.Size = UDim2.new(1, 0, 0, height)
                     Label.Size = UDim2.new(1, -20, 0, height)
                 end
