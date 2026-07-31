@@ -806,10 +806,12 @@ function FlooxaLib:CreateWindow(options)
                 LabelFrame.Parent = ItemsContainer
                 
                 local Label = Instance.new("TextLabel")
-                Label.Position = UDim2.new(0, 10, 0, 0)
+                Label.Position = UDim2.new(0, 10, 0, wrapped and 4 or 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
                 Label.TextColor3 = Color3.fromRGB(200, 200, 200)
+                Label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                Label.TextStrokeTransparency = wrapped and 0.35 or 1
                 Label.Font = Enum.Font.Gotham
                 Label.TextSize = 13
                 Label.TextXAlignment = Enum.TextXAlignment.Left
@@ -824,9 +826,9 @@ function FlooxaLib:CreateWindow(options)
                         Label.Font,
                         Vector2.new(width, math.huge)
                     )
-                    local height = wrapped and math.max(25, textBounds.Y + 30) or 25
+                    local height = wrapped and math.max(25, textBounds.Y + 12) or 25
                     LabelFrame.Size = UDim2.new(1, 0, 0, height)
-                    Label.Size = UDim2.new(1, -20, 0, height)
+                    Label.Size = UDim2.new(1, -20, 0, height - (wrapped and 4 or 0))
                 end
 
                 updateLabelSize()
