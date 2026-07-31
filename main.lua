@@ -621,15 +621,33 @@ function FlooxaLib:CreateWindow(options)
                 local optionButtons = {}
                 local optionCircles = {}
 
+                local RadioFrame = Instance.new("Frame")
+                RadioFrame.Size = UDim2.new(1, 0, 0, 35)
+                RadioFrame.BackgroundTransparency = 1
+                RadioFrame.Parent = ItemsContainer
+
                 local RadioLabel = Instance.new("TextLabel")
-                RadioLabel.Size = UDim2.new(1, 0, 0, 24)
+                RadioLabel.Size = UDim2.new(0.3, -5, 1, 0)
                 RadioLabel.BackgroundTransparency = 1
                 RadioLabel.Text = radioName
                 RadioLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
                 RadioLabel.Font = Enum.Font.GothamSemibold
                 RadioLabel.TextSize = 13
                 RadioLabel.TextXAlignment = Enum.TextXAlignment.Left
-                RadioLabel.Parent = ItemsContainer
+                RadioLabel.Parent = RadioFrame
+
+                local OptionsFrame = Instance.new("Frame")
+                OptionsFrame.Size = UDim2.new(0.7, 0, 1, 0)
+                OptionsFrame.Position = UDim2.new(0.3, 5, 0, 0)
+                OptionsFrame.BackgroundTransparency = 1
+                OptionsFrame.Parent = RadioFrame
+
+                local OptionsLayout = Instance.new("UIListLayout")
+                OptionsLayout.FillDirection = Enum.FillDirection.Horizontal
+                OptionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+                OptionsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+                OptionsLayout.Padding = UDim.new(0, 5)
+                OptionsLayout.Parent = OptionsFrame
 
                 local function updateRadio(value)
                     selected = value
@@ -641,18 +659,19 @@ function FlooxaLib:CreateWindow(options)
                     callback(selected)
                 end
 
+                local optionWidth = #options > 0 and (1 / #options) or 1
                 for _, option in ipairs(options) do
                     local optionText = tostring(option)
                     local optionButton = Instance.new("TextButton")
-                    optionButton.Size = UDim2.new(1, 0, 0, 32)
+                    optionButton.Size = UDim2.new(optionWidth, -5, 1, 0)
                     optionButton.BackgroundColor3 = optionText == selected and Color3.fromRGB(55, 45, 65) or Color3.fromRGB(35, 35, 35)
                     optionButton.BackgroundTransparency = 0.4
                     optionButton.Text = optionText
                     optionButton.TextColor3 = Color3.fromRGB(240, 240, 240)
                     optionButton.Font = Enum.Font.GothamSemibold
-                    optionButton.TextSize = 13
+                    optionButton.TextSize = 12
                     optionButton.TextXAlignment = Enum.TextXAlignment.Left
-                    optionButton.Parent = ItemsContainer
+                    optionButton.Parent = OptionsFrame
                     optionButtons[optionText] = optionButton
 
                     local optionCorner = Instance.new("UICorner")
@@ -660,8 +679,8 @@ function FlooxaLib:CreateWindow(options)
                     optionCorner.Parent = optionButton
 
                     local circle = Instance.new("Frame")
-                    circle.Size = UDim2.fromOffset(16, 16)
-                    circle.Position = UDim2.new(1, -28, 0.5, -8)
+                    circle.Size = UDim2.fromOffset(14, 14)
+                    circle.Position = UDim2.new(1, -22, 0.5, -7)
                     circle.BackgroundColor3 = optionText == selected and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(50, 50, 50)
                     circle.Parent = optionButton
                     optionCircles[optionText] = circle
