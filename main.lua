@@ -883,6 +883,15 @@ function FlooxaLib:CreateWindow(options)
                         callback(text)
                     end
                 end)
+
+                return {
+                    SetVisible = function(visible)
+                        InputFrame.Visible = visible
+                    end,
+                    GetValue = function()
+                        return TextBox.Text
+                    end,
+                }
             end
 
             function SectionAPI:AddDropdown(dropOptions)
