@@ -887,6 +887,7 @@ function FlooxaLib:CreateWindow(options)
                 return {
                     SetVisible = function(visible)
                         InputFrame.Visible = visible
+                        InputFrame.Size = visible and UDim2.new(1, 0, 0, 35) or UDim2.new(1, 0, 0, 0)
                     end,
                     GetValue = function()
                         return TextBox.Text
