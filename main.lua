@@ -285,6 +285,63 @@ function FlooxaLib:CreateWindow(options)
         end
     end
 
+    local transparencyFactor = 0
+    local transparencyBase = {}
+    local transparencyConnection
+
+    local function applyTransparency(instance)
+        if not instance:IsA("GuiObject") and not instance:IsA("UIStroke") then
+            return
+        end
+
+        local properties = {}
+        if instance:IsA("GuiObject") then
+            properties = {"BackgroundTransparency", "TextTransparency", "TextStrokeTransparency", "ImageTransparency"}
+        elseif instance:IsA("UIStroke") then
+            properties = {"Transparency"}
+        end
+
+        local base = transparencyBase[instance]
+        if not base then
+            base = {}
+            transparencyBase[instance] = base
+        end
+
+        for _, property in ipairs(properties) do
+            local ok, value = pcall(function()
+                return instance[property]
+            end)
+            if ok and type(value) == "number" then
+                if base[property] == nil then
+                    base[property] = value
+                end
+                instance[property] = base[property] + ((1 - base[property]) * transparencyFactor)
+            end
+        end
+    end
+
+    local function applyTransparencyToTree()
+        applyTransparency(ScreenGui)
+        for _, descendant in ipairs(ScreenGui:GetDescendants()) do
+            applyTransparency(descendant)
+        end
+    end
+
+    function WindowAPI:SetTransparency(value)
+        transparencyFactor = math.clamp(tonumber(value) or 0, 0, 100) / 100
+        applyTransparencyToTree()
+        if transparencyConnection then
+            transparencyConnection:Disconnect()
+        end
+        transparencyConnection = ScreenGui.DescendantAdded:Connect(function(descendant)
+            task.defer(function()
+                if descendant.Parent then
+                    applyTransparency(descendant)
+                end
+            end)
+        end)
+    end
+
     function WindowAPI:SetMinimized(minimized)
         setMinimized(minimized == true)
     end
