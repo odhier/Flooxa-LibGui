@@ -914,12 +914,9 @@ function FlooxaLib:CreateWindow(options)
                 end
 
                 if visible then
-                    inputFrame.Parent = ItemsContainer
                     inputFrame.Visible = true
-                    inputFrame.Size = UDim2.new(1, 0, 0, 35)
                 else
                     inputFrame.Visible = false
-                    inputFrame.Parent = nil
                 end
                 return true
             end
