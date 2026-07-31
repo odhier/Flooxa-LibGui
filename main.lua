@@ -1,4 +1,5 @@
 local TweenService = game:GetService("TweenService")
+local TextService = game:GetService("TextService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
@@ -801,12 +802,10 @@ function FlooxaLib:CreateWindow(options)
                 local wrapped = labelOptions.TextWrapped == true
                 
                 local LabelFrame = Instance.new("Frame")
-                LabelFrame.Size = UDim2.new(1, 0, 0, 25)
                 LabelFrame.BackgroundTransparency = 1
                 LabelFrame.Parent = ItemsContainer
                 
                 local Label = Instance.new("TextLabel")
-                Label.Size = UDim2.new(1, -10, 1, 0)
                 Label.Position = UDim2.new(0, 10, 0, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
@@ -815,12 +814,23 @@ function FlooxaLib:CreateWindow(options)
                 Label.TextSize = 13
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.TextWrapped = wrapped
-                if wrapped then
-                    LabelFrame.AutomaticSize = Enum.AutomaticSize.Y
-                    Label.AutomaticSize = Enum.AutomaticSize.Y
-                    Label.Size = UDim2.new(1, -10, 0, 0)
-                end
                 Label.Parent = LabelFrame
+
+                local function updateLabelSize()
+                    local width = math.max(1, ItemsContainer.AbsoluteSize.X - 30)
+                    local textBounds = TextService:GetTextSize(
+                        text,
+                        Label.TextSize,
+                        Label.Font,
+                        Vector2.new(width, math.huge)
+                    )
+                    local height = wrapped and math.max(25, textBounds.Y + 4) or 25
+                    LabelFrame.Size = UDim2.new(1, 0, 0, height)
+                    Label.Size = UDim2.new(1, -20, 0, height)
+                end
+
+                updateLabelSize()
+                ItemsContainer:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateLabelSize)
             end
 
             function SectionAPI:AddInput(inputOptions)
