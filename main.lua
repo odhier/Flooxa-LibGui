@@ -802,8 +802,19 @@ function FlooxaLib:CreateWindow(options)
                 local wrapped = labelOptions.TextWrapped == true
                 
                 local LabelFrame = Instance.new("Frame")
-                LabelFrame.BackgroundTransparency = 1
+                LabelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                LabelFrame.BackgroundTransparency = 0.35
                 LabelFrame.Parent = ItemsContainer
+
+                local LabelCorner = Instance.new("UICorner")
+                LabelCorner.CornerRadius = UDim.new(0, 5)
+                LabelCorner.Parent = LabelFrame
+
+                local LabelStroke = Instance.new("UIStroke")
+                LabelStroke.Color = Color3.fromRGB(105, 75, 125)
+                LabelStroke.Transparency = 0.15
+                LabelStroke.Thickness = 1
+                LabelStroke.Parent = LabelFrame
                 
                 local Label = Instance.new("TextLabel")
                 Label.Position = UDim2.new(0, 10, 0, wrapped and 4 or 0)
@@ -819,19 +830,24 @@ function FlooxaLib:CreateWindow(options)
                 Label.Parent = LabelFrame
 
                 local function updateLabelSize()
-                    local width = math.max(1, ItemsContainer.AbsoluteSize.X - 30)
+                    local horizontalPadding = 20
+                    local verticalPadding = wrapped and 12 or 0
+                    local width = math.max(1, ItemsContainer.AbsoluteSize.X - 30 - horizontalPadding)
                     local textBounds = TextService:GetTextSize(
                         text,
                         Label.TextSize,
                         Label.Font,
                         Vector2.new(width, math.huge)
                     )
-                    local height = wrapped and math.max(25, textBounds.Y + 12) or 25
+                    local height = wrapped and math.max(25, textBounds.Y + verticalPadding) or 25
                     LabelFrame.Size = UDim2.new(1, 0, 0, height)
-                    Label.Size = UDim2.new(1, -20, 0, height - (wrapped and 4 or 0))
+                    Label.Size = UDim2.new(1, -30, 0, height - verticalPadding)
+                    Label.Position = UDim2.new(0, 15, 0, wrapped and 6 or 0)
                 end
 
                 updateLabelSize()
+                task.defer(updateLabelSize)
+                task.delay(0.1, updateLabelSize)
                 ItemsContainer:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateLabelSize)
             end
 
