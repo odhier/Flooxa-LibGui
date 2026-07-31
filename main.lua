@@ -825,6 +825,8 @@ function FlooxaLib:CreateWindow(options)
                 
                 local InputFrame = Instance.new("Frame")
                 InputFrame.Name = inputOptions.FrameName or name
+                InputFrame.LayoutOrder = #ItemsContainer:GetChildren()
+                local inputLayoutOrder = InputFrame.LayoutOrder
                 InputFrame.Size = UDim2.new(1, 0, 0, 35)
                 InputFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
                 InputFrame.BackgroundTransparency = 0.4
@@ -890,6 +892,7 @@ function FlooxaLib:CreateWindow(options)
                 return {
                     SetVisible = function(visible)
                         if visible then
+                            InputFrame.LayoutOrder = inputLayoutOrder
                             InputFrame.Parent = ItemsContainer
                             InputFrame.Visible = true
                             InputFrame.Size = UDim2.new(1, 0, 0, 35)
