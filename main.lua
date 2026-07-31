@@ -245,40 +245,56 @@ function FlooxaLib:CreateWindow(options)
     MinimizeBtn.Font = Enum.Font.GothamBold
     MinimizeBtn.Parent = Topbar
     
+    local isMinimized = false
+
+    local function setMinimized(minimized)
+        if minimized == isMinimized then
+            return
+        end
+
+        isMinimized = minimized
+        if minimized then
+            TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
+            TweenService:Create(FooterFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
+            TweenService:Create(DiscordBtn, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
+            TweenService:Create(VersionLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
+            TweenService:Create(FooterStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
+            task.wait(0.3)
+            MainFrame.Visible = false
+            FooterFrame.Visible = false
+            FloatingLogo.Visible = true
+            FloatingLogo.Size = UDim2.fromOffset(0, 0)
+            TweenService:Create(FloatingLogo, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(60, 60)}):Play()
+        else
+            TweenService:Create(FloatingLogo, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
+            task.wait(0.2)
+            FloatingLogo.Visible = false
+            MainFrame.Visible = true
+            FooterFrame.Visible = true
+            TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(550, 350)}):Play()
+            FooterFrame.BackgroundTransparency = 1
+            DiscordBtn.TextTransparency = 1
+            VersionLabel.TextTransparency = 1
+            FooterStroke.Transparency = 1
+            task.delay(0.15, function()
+                TweenService:Create(FooterFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0.4}):Play()
+                TweenService:Create(DiscordBtn, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+                TweenService:Create(VersionLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+                TweenService:Create(FooterStroke, TweenInfo.new(0.3), {Transparency = 0.92}):Play()
+            end)
+        end
+    end
+
+    function WindowAPI:SetMinimized(minimized)
+        setMinimized(minimized == true)
+    end
+
     MinimizeBtn.MouseButton1Click:Connect(function()
-        TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
-        TweenService:Create(FooterFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(DiscordBtn, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
-        TweenService:Create(VersionLabel, TweenInfo.new(0.2), {TextTransparency = 1}):Play()
-        TweenService:Create(FooterStroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
-        task.wait(0.3)
-        MainFrame.Visible = false
-        FooterFrame.Visible = false
-        FloatingLogo.Visible = true
-        
-        FloatingLogo.Size = UDim2.fromOffset(0, 0)
-        TweenService:Create(FloatingLogo, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(60, 60)}):Play()
+        setMinimized(true)
     end)
-    
+
     FloatingLogo.MouseButton1Click:Connect(function()
-        TweenService:Create(FloatingLogo, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.fromOffset(0, 0)}):Play()
-        task.wait(0.2)
-        FloatingLogo.Visible = false
-        MainFrame.Visible = true
-        FooterFrame.Visible = true
-        
-        TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(550, 350)}):Play()
-        -- Fade footer back in
-        FooterFrame.BackgroundTransparency = 1
-        DiscordBtn.TextTransparency = 1
-        VersionLabel.TextTransparency = 1
-        FooterStroke.Transparency = 1
-        task.delay(0.15, function()
-            TweenService:Create(FooterFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0.4}):Play()
-            TweenService:Create(DiscordBtn, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-            TweenService:Create(VersionLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-            TweenService:Create(FooterStroke, TweenInfo.new(0.3), {Transparency = 0.92}):Play()
-        end)
+        setMinimized(false)
     end)
     
     local Body = Instance.new("Frame")
