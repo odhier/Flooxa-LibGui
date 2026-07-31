@@ -51,6 +51,10 @@ function FlooxaLib:CreateWindow(options)
     ScreenGui.Name = "FlooxaLibGui"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local hideOnScreenshot = false
+    local focusReleasedConnection
+    local focusedConnection
     
     local success, _ = pcall(function() ScreenGui.Parent = CoreGui end)
     if not success then 
@@ -339,6 +343,36 @@ function FlooxaLib:CreateWindow(options)
                     applyTransparency(descendant)
                 end
             end)
+        end)
+    end
+
+    function WindowAPI:SetHideOnScreenshot(enabled)
+        hideOnScreenshot = enabled == true
+
+        if focusReleasedConnection then
+            focusReleasedConnection:Disconnect()
+            focusReleasedConnection = nil
+        end
+        if focusedConnection then
+            focusedConnection:Disconnect()
+            focusedConnection = nil
+        end
+
+        ScreenGui.Enabled = true
+        if not hideOnScreenshot then
+            return
+        end
+
+        focusReleasedConnection = UserInputService.WindowFocusReleased:Connect(function()
+            if hideOnScreenshot then
+                ScreenGui.Enabled = false
+            end
+        end)
+
+        focusedConnection = UserInputService.WindowFocused:Connect(function()
+            if hideOnScreenshot then
+                ScreenGui.Enabled = true
+            end
         end)
     end
 
