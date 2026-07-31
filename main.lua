@@ -798,6 +798,7 @@ function FlooxaLib:CreateWindow(options)
             
             function SectionAPI:AddLabel(labelOptions)
                 local text = labelOptions.Text or "Label"
+                local wrapped = labelOptions.TextWrapped == true
                 
                 local LabelFrame = Instance.new("Frame")
                 LabelFrame.Size = UDim2.new(1, 0, 0, 25)
@@ -813,6 +814,12 @@ function FlooxaLib:CreateWindow(options)
                 Label.Font = Enum.Font.Gotham
                 Label.TextSize = 13
                 Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.TextWrapped = wrapped
+                if wrapped then
+                    LabelFrame.AutomaticSize = Enum.AutomaticSize.Y
+                    Label.AutomaticSize = Enum.AutomaticSize.Y
+                    Label.Size = UDim2.new(1, -10, 0, 0)
+                end
                 Label.Parent = LabelFrame
             end
 
