@@ -503,6 +503,7 @@ function FlooxaLib:CreateWindow(options)
                 if isOpen then UpdateSectionSize() end
             end)
             
+            local inputFrames = {}
             local SectionAPI = {
                 Container = ItemsContainer,
                 Instance = SectionFrame
@@ -823,10 +824,12 @@ function FlooxaLib:CreateWindow(options)
                 local callback = inputOptions.Callback or function() end
                 
                 local InputFrame = Instance.new("Frame")
+                InputFrame.Name = inputOptions.FrameName or name
                 InputFrame.Size = UDim2.new(1, 0, 0, 35)
                 InputFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
                 InputFrame.BackgroundTransparency = 0.4
                 InputFrame.Parent = ItemsContainer
+                inputFrames[InputFrame.Name] = InputFrame
                 
                 local UICorner = Instance.new("UICorner")
                 UICorner.CornerRadius = UDim.new(0, 6)
@@ -899,6 +902,23 @@ function FlooxaLib:CreateWindow(options)
                         return TextBox.Text
                     end,
                 }
+            end
+
+            function SectionAPI:SetInputVisible(frameName, visible)
+                local inputFrame = inputFrames[frameName]
+                if not inputFrame then
+                    return false
+                end
+
+                if visible then
+                    inputFrame.Parent = ItemsContainer
+                    inputFrame.Visible = true
+                    inputFrame.Size = UDim2.new(1, 0, 0, 35)
+                else
+                    inputFrame.Visible = false
+                    inputFrame.Parent = nil
+                end
+                return true
             end
 
             function SectionAPI:AddDropdown(dropOptions)
