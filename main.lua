@@ -1036,7 +1036,22 @@ function FlooxaLib:CreateWindow(options)
                 local default = dropOptions.Default or nil
                 local callback = dropOptions.Callback or function() end
                 
-                local selected = multi and {} or default
+                local function normalizeMultiSelection(value)
+                    local normalized = {}
+                    if type(value) ~= "table" then
+                        return normalized
+                    end
+                    for key, item in pairs(value) do
+                        if type(key) == "number" and type(item) == "string" then
+                            normalized[item] = true
+                        elseif type(key) == "string" and item == true then
+                            normalized[key] = true
+                        end
+                    end
+                    return normalized
+                end
+
+                local selected = multi and normalizeMultiSelection(default) or default
                 local isOpen = false
                 
                 local DropFrame = Instance.new("Frame")
@@ -1060,10 +1075,14 @@ function FlooxaLib:CreateWindow(options)
                 Title.Size = UDim2.new(1, -40, 1, 0)
                 Title.Position = UDim2.new(0, 10, 0, 0)
                 Title.BackgroundTransparency = 1
-                if default and not multi then
+                if multi then
+                    local count = 0
+                    for _ in pairs(selected) do count = count + 1 end
+                    Title.Text = name .. " (" .. count .. ")"
+                elseif default then
                     Title.Text = name .. ": " .. tostring(default)
                 else
-                    Title.Text = name .. (multi and " (0)" or "")
+                    Title.Text = name
                 end
                 Title.TextColor3 = Color3.fromRGB(240, 240, 240)
                 Title.Font = Enum.Font.GothamSemibold
@@ -1295,7 +1314,7 @@ function FlooxaLib:CreateWindow(options)
                         createOptions("")
                     end,
                     Set = function(value)
-                        selected = value
+                        selected = multi and normalizeMultiSelection(value) or value
                         updateTitle()
                         createOptions("")
                     end
