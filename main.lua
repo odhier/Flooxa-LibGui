@@ -1317,7 +1317,10 @@ function FlooxaLib:CreateWindow(options)
                         selected = multi and normalizeMultiSelection(value) or value
                         updateTitle()
                         createOptions("")
-                    end
+                    end,
+                    SetVisible = function(visible)
+                        DropFrame.Visible = visible
+                    end,
                 }
             end
 
