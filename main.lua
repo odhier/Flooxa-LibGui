@@ -1071,6 +1071,7 @@ function FlooxaLib:CreateWindow(options)
                 DropFrame.BackgroundTransparency = 0.4
                 DropFrame.ClipsDescendants = true
                 DropFrame.Parent = ItemsContainer
+                inputFrames[name] = DropFrame
                 
                 local DropCorner = Instance.new("UICorner")
                 DropCorner.CornerRadius = UDim.new(0, 6)
