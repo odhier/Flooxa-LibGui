@@ -721,7 +721,7 @@ function FlooxaLib:CreateWindow(options)
 
                 local OptionsLayout = Instance.new("UIListLayout")
                 OptionsLayout.FillDirection = Enum.FillDirection.Horizontal
-                OptionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+                OptionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
                 OptionsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
                 OptionsLayout.Padding = UDim.new(0, 5)
                 OptionsLayout.Parent = OptionsFrame
@@ -743,7 +743,7 @@ function FlooxaLib:CreateWindow(options)
                     optionButton.Size = UDim2.new(optionWidth, -5, 1, 0)
                     optionButton.BackgroundColor3 = optionText == selected and Color3.fromRGB(55, 45, 65) or Color3.fromRGB(35, 35, 35)
                     optionButton.BackgroundTransparency = 0.4
-                    optionButton.Text = optionText
+                    optionButton.Text = "   " .. optionText
                     optionButton.TextColor3 = Color3.fromRGB(240, 240, 240)
                     optionButton.Font = Enum.Font.GothamSemibold
                     optionButton.TextSize = 12
@@ -757,7 +757,7 @@ function FlooxaLib:CreateWindow(options)
 
                     local circle = Instance.new("Frame")
                     circle.Size = UDim2.fromOffset(14, 14)
-                    circle.Position = UDim2.new(1, -22, 0.5, -7)
+                    circle.Position = UDim2.new(0, 7, 0.5, -7)
                     circle.BackgroundColor3 = optionText == selected and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(50, 50, 50)
                     circle.Parent = optionButton
                     optionCircles[optionText] = circle
@@ -1320,6 +1320,7 @@ function FlooxaLib:CreateWindow(options)
                     end,
                     SetVisible = function(visible)
                         DropFrame.Visible = visible
+                        DropFrame.Size = visible and UDim2.new(1, 0, 0, 35) or UDim2.new(1, 0, 0, 0)
                     end,
                 }
             end
