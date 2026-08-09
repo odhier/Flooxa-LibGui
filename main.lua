@@ -105,6 +105,36 @@ function FlooxaLib:CreateWindow(options)
     MainFrame.BackgroundTransparency = 0.35
     MainFrame.ClipsDescendants = true
     MainFrame.Parent = ScreenGui
+
+    local BASE_WIDTH, BASE_HEIGHT = 550, 350
+    local MainScale = Instance.new("UIScale")
+    MainScale.Name = "ResponsiveScale"
+    MainScale.Parent = MainFrame
+
+    local cameraConnection
+    local function updateResponsiveScale()
+        local camera = workspace.CurrentCamera
+        local viewport = camera and camera.ViewportSize or Vector2.new(BASE_WIDTH, BASE_HEIGHT)
+        local isMobile = UserInputService.TouchEnabled and viewport.X <= 900
+        if isMobile then
+            local widthScale = (viewport.X - 24) / BASE_WIDTH
+            local heightScale = (viewport.Y - 64) / (BASE_HEIGHT + 34)
+            MainScale.Scale = math.clamp(math.min(0.78, widthScale, heightScale), 0.55, 0.78)
+        else
+            MainScale.Scale = 1
+        end
+    end
+
+    local function watchCamera()
+        if cameraConnection then cameraConnection:Disconnect() end
+        local camera = workspace.CurrentCamera
+        if camera then
+            cameraConnection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(updateResponsiveScale)
+        end
+        updateResponsiveScale()
+    end
+    workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(watchCamera)
+    watchCamera()
     
     local MainGradient = Instance.new("UIGradient")
     MainGradient.Color = ColorSequence.new({
