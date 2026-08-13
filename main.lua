@@ -1258,6 +1258,35 @@ function FlooxaLib:CreateWindow(options)
                         TweenService:Create(Icon, TweenInfo.new(0.3), {Rotation = 0}):Play()
                     end
                 end)
+
+                return {
+                    SetOptions = function(newOptions, newDefault)
+                        options = type(newOptions) == "table" and newOptions or {}
+                        if multi then
+                            selected = normalizeMultiSelection(newDefault)
+                        else
+                            selected = newDefault
+                            if selected == nil or not table.find(options, selected) then
+                                selected = options[1]
+                            end
+                        end
+                        SearchBox.Text = ""
+                        updateTitle()
+                        createOptions("")
+                    end,
+                    SetValue = function(value)
+                        if multi then
+                            selected = normalizeMultiSelection(value)
+                        else
+                            selected = value
+                        end
+                        updateTitle()
+                        createOptions(SearchBox.Text)
+                    end,
+                    GetValue = function()
+                        return selected
+                    end,
+                }
             end
 
             function SectionAPI:AddRadioGroup(radioOptions)
